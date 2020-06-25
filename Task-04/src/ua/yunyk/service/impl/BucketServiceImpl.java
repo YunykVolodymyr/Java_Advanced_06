@@ -9,10 +9,19 @@ import ua.yunyk.service.BucketService;
 
 public class BucketServiceImpl implements BucketService {
 
+	private static BucketService bucketServiceImpl;
 	private BucketDao bucketDao;
 
-	public BucketServiceImpl() {
+	private BucketServiceImpl() {
 		bucketDao = new BucketDaoImpl();
+	}
+
+	public static BucketService getBucketService() {
+		if (bucketServiceImpl == null) {
+			bucketServiceImpl = new BucketServiceImpl();
+		}
+
+		return bucketServiceImpl;
 	}
 
 	@Override
@@ -38,11 +47,6 @@ public class BucketServiceImpl implements BucketService {
 	@Override
 	public List<Bucket> readAll() {
 		return bucketDao.readAll();
-	}
-
-	@Override
-	public Bucket readByParameter(Object parameter) {
-		return bucketDao.readByParameter(parameter);
 	}
 
 }

@@ -2,13 +2,11 @@ package ua.yunyk.shared;
 
 import java.util.List;
 
-public interface AbstractCRUD<T, E> {
+public interface AbstractCRUD<T> {
 
 	T create(T t);
 
 	T read(Integer id);
-
-	T readByParameter(E parameter);
 
 	T update(T t);
 

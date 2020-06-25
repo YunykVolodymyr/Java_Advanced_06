@@ -9,10 +9,19 @@ import ua.yunyk.service.ProductService;
 
 public class ProductServiceImpl implements ProductService {
 
+	private static ProductService productServiceImpl;
 	private ProductDao productDao;
 
-	public ProductServiceImpl() {
+	private ProductServiceImpl() {
 		productDao = new ProductDaoImpl();
+	}
+
+	public static ProductService getProductService() {
+		if (productServiceImpl == null) {
+			productServiceImpl = new ProductServiceImpl();
+		}
+
+		return productServiceImpl;
 	}
 
 	@Override
@@ -38,11 +47,6 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> readAll() {
 		return productDao.readAll();
-	}
-
-	@Override
-	public Product readByParameter(String parameter) {
-		return productDao.readByParameter(parameter);
 	}
 
 }

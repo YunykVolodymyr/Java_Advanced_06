@@ -9,10 +9,19 @@ import ua.yunyk.service.UserService;
 
 public class UserServiceImpl implements UserService {
 
+	private static UserService userServiceImpl;
 	private UserDao userDao;
 
-	public UserServiceImpl() {
+	private UserServiceImpl() {
 		userDao = new UserDaoImpl();
+	}
+
+	public static UserService getUserService() {
+		if (userServiceImpl == null) {
+			userServiceImpl = new UserServiceImpl();
+		}
+
+		return userServiceImpl;
 	}
 
 	@Override
@@ -41,8 +50,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User readByParameter(String parameter) {
-		return userDao.readByParameter(parameter);
+	public User getUserByEmail(String email) {
+		return userDao.getUserByEmail(email);
 	}
 
 }

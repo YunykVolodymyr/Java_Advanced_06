@@ -10,6 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ua.yunyk.dao.BucketDao;
 import ua.yunyk.domain.Bucket;
 import ua.yunyk.utils.ConnectionUtils;
@@ -21,6 +23,9 @@ public class BucketDaoImpl implements BucketDao {
 	private static String READ_BY_ID = "select * from bucket where id = ?";
 	private static String DELETE_BY_ID = "delete from bucket where id = ?";
 
+	private static Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
+
+	
 	@Override
 	public Bucket create(Bucket bucket) {
 		try {
@@ -35,7 +40,7 @@ public class BucketDaoImpl implements BucketDao {
 			bucket.setId(rs.getInt(1));
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return bucket;
 	}
@@ -55,14 +60,15 @@ public class BucketDaoImpl implements BucketDao {
 			bucket = new Bucket(id, userId, productId, purchaseDate);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return bucket;
 	}
 
 	@Override
 	public Bucket update(Bucket bucket) {
-		throw new IllegalStateException("there is no update for bucket");
+		LOGGER.error("there is no update for bucket");
+		return null;
 	}
 
 	@Override
@@ -74,7 +80,7 @@ public class BucketDaoImpl implements BucketDao {
 			preparedStatement.executeUpdate();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 	}
 
@@ -95,15 +101,10 @@ public class BucketDaoImpl implements BucketDao {
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return bucketRecords;
 	}
 
-	@Override
-	public Bucket readByParameter(Object parameter) {
-		throw new IllegalStateException("there is no read by parameter for bucket");
-
-	}
 
 }

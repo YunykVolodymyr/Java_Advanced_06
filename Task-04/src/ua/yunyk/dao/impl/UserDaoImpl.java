@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ua.yunyk.dao.UserDao;
 import ua.yunyk.domain.User;
 import ua.yunyk.utils.ConnectionUtils;
@@ -21,6 +23,8 @@ public class UserDaoImpl implements UserDao {
 	private static String READ_BY_EMAIL = "select * from user where email = ?";
 	private static String UPDATE_BY_ID = "update user set email=?, password=?, first_name=?, last_name=?, role=? where id = ?";
 	private static String DELETE_BY_ID = "delete from user where id = ?";
+
+	private static Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
 
 	@Override
 	public User create(User user) {
@@ -38,7 +42,7 @@ public class UserDaoImpl implements UserDao {
 			user.setId(rs.getInt(1));
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return user;
 	}
@@ -60,7 +64,7 @@ public class UserDaoImpl implements UserDao {
 			user = new User(id, email, password, firstName, lastName, role);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return user;
 	}
@@ -79,7 +83,7 @@ public class UserDaoImpl implements UserDao {
 			preparedStatement.executeUpdate();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return user;
 	}
@@ -93,7 +97,7 @@ public class UserDaoImpl implements UserDao {
 			preparedStatement.executeUpdate();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 	}
 
@@ -116,31 +120,32 @@ public class UserDaoImpl implements UserDao {
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return userRecords;
 	}
 
 	@Override
-	public User readByParameter(java.lang.String email) {
+	public User getUserByEmail(String email) {
 		User user = null;
 		try {
 			Connection connection = ConnectionUtils.openConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(READ_BY_EMAIL);
 			preparedStatement.setString(1, email);
 			ResultSet resultSet = preparedStatement.executeQuery();
-			resultSet.next();
-			Integer id = resultSet.getInt("id");
-			String password = resultSet.getString("password");
-			String firstName = resultSet.getString("first_name");
-			String lastName = resultSet.getString("last_name");
-			String role = resultSet.getString("role");
-			user = new User(id, email, password, firstName, lastName, role);
+			if (resultSet.next()) {
+				Integer id = resultSet.getInt("id");
+				String password = resultSet.getString("password");
+				String firstName = resultSet.getString("first_name");
+				String lastName = resultSet.getString("last_name");
+				String role = resultSet.getString("role");
+				user = new User(id, email, password, firstName, lastName, role);
+			}
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return user;
 	}
-	
+
 }

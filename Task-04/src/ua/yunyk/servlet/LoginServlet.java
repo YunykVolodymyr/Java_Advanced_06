@@ -1,4 +1,4 @@
-package ua.yunyk;
+package ua.yunyk.servlet;
 
 import java.io.IOException;
 
@@ -16,18 +16,13 @@ import ua.yunyk.service.impl.UserServiceImpl;
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		request.getRequestDispatcher("login.jsp").forward(request, response);
-	}
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		UserService userService = new UserServiceImpl();
+		UserService userService = UserServiceImpl.getUserService();
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 
-		User user = userService.readByParameter(email);
+		User user = userService.getUserByEmail(email);
 		if (user == null) {
 			request.setAttribute("errorMessage",
 					"<br>There is no users with entered email<br> <a href=\"Registration.jsp\">Registration</a>");

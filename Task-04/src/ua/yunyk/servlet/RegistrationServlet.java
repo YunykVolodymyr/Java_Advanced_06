@@ -1,4 +1,4 @@
-package ua.yunyk;
+package ua.yunyk.servlet;
 
 import java.io.IOException;
 
@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ua.yunyk.domain.User;
+import ua.yunyk.domain.UserRole;
 import ua.yunyk.service.UserService;
 import ua.yunyk.service.impl.UserServiceImpl;
 
@@ -16,16 +17,11 @@ import ua.yunyk.service.impl.UserServiceImpl;
 public class RegistrationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		request.getRequestDispatcher("Registration.jsp").forward(request, response);
-	}
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		UserService userService = new UserServiceImpl();
+		UserService userService = UserServiceImpl.getUserService();
 		User user = new User(request.getParameter("email"), request.getParameter("password"),
-				request.getParameter("firstName"), request.getParameter("lastName"), "user");
+				request.getParameter("firstName"), request.getParameter("lastName"), UserRole.USER.toString());
 		if (user.getFirstName() == null || user.getFirstName() == "") {
 			request.setAttribute("errorMessage", "<br> First name entered wrong");
 			request.setAttribute("firstName", user.getFirstName());
@@ -58,13 +54,12 @@ public class RegistrationServlet extends HttpServlet {
 			request.getRequestDispatcher("Registration.jsp").forward(request, response);
 		}
 
-		if (userService.readByParameter(user.getEmail()) != null) {
+		if (userService.getUserByEmail(user.getEmail()) != null) {
 			request.setAttribute("errorMessage",
 					"<br>There is user with this email address <br> <a href=\"login.jsp\">Log in</a>");
 			request.setAttribute("firstName", user.getFirstName());
 			request.setAttribute("lastName", user.getLastName());
 			request.setAttribute("email", user.getEmail());
-			;
 			request.getRequestDispatcher("Registration.jsp").forward(request, response);
 			return;
 		}

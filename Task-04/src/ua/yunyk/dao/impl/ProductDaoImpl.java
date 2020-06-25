@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ua.yunyk.dao.ProductDao;
 import ua.yunyk.domain.Product;
 import ua.yunyk.utils.ConnectionUtils;
@@ -18,11 +20,12 @@ public class ProductDaoImpl implements ProductDao {
 	private static String READ_ALL = "select * from product";
 	private static String CREATE = "insert into product(`name`, `description`, `price`) values(?,?,?)";
 	private static String READ_BY_ID = "select * from product where id = ?";
-	private static String READ_BY_NAME = "select * from product where name = ?";
 	private static String UPDATE_BY_ID = "update product set name=?, description=?, price=? where id = ?";
 	private static String DELETE_BY_ID = "delete from product where id = ?";
 	
+	private static Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
 
+	
 	@Override
 	public Product create(Product product) {
 		try {
@@ -37,7 +40,7 @@ public class ProductDaoImpl implements ProductDao {
 			product.setId(rs.getInt(1));
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return product;
 	}
@@ -57,7 +60,7 @@ public class ProductDaoImpl implements ProductDao {
 			product = new Product(id, name, description, price);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return product;
 	}
@@ -74,7 +77,7 @@ public class ProductDaoImpl implements ProductDao {
 			preparedStatement.executeUpdate();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return product;
 	}
@@ -88,7 +91,7 @@ public class ProductDaoImpl implements ProductDao {
 			preparedStatement.executeUpdate();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 	}
 
@@ -109,29 +112,10 @@ public class ProductDaoImpl implements ProductDao {
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return productRecords;
 	}
 
-	@Override
-	public Product readByParameter(String name) {
-		Product product = null;
-		try {
-			Connection connection = ConnectionUtils.openConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(READ_BY_NAME);
-			preparedStatement.setString(1, name);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			resultSet.next();
-			Integer id = resultSet.getInt("id");
-			String description = resultSet.getString("description");
-			Double price = resultSet.getDouble("price");
-			product = new Product(id, name, description, price);
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
-				| InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
-			e.printStackTrace();
-		}
-		return product;
-	}
 
 }
